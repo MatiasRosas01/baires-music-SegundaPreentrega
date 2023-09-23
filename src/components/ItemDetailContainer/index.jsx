@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import placeholderImage from "../../img/placeholder.webp";
 import { useParams } from "react-router-dom";
+import { agregarCarrito } from "../../helpers/carrito";
 import "./index.css";
 
 export default function ItemDetailContainer({ instrumentos, categorias }) {
   let { id } = useParams();
   let [instrumentoActual, setInstrumentoActual] = useState();
+  const numberWithCommas = (x) => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
 
   useEffect(() => {
     if (id) {
-      console.log(Number(id));
-      const aux = instrumentos.find(
-        (instrumento) => instrumento.id === Number(id)
-      );
-      console.log(aux);
+      const aux = instrumentos.find((instrumento) => instrumento.id === id);
       setInstrumentoActual(aux);
     }
   }, [id]);
@@ -27,7 +27,13 @@ export default function ItemDetailContainer({ instrumentos, categorias }) {
             <p>{instrumentoActual.nombre}</p>
             <p>{categorias[instrumentoActual.categoria]}</p>
             <p>{instrumentoActual.detalles}</p>
-            <p>{instrumentoActual.precio}</p>
+            <p>{numberWithCommas(instrumentoActual.precio)}</p>
+            <div
+              className="button"
+              onClick={() => agregarCarrito(instrumentoActual.id)}
+            >
+              <p>Agregar al carrito</p>
+            </div>
           </div>
         </div>
       );

@@ -1,49 +1,45 @@
-import logo from "./logo.svg";
 import NavBar from "./components/NavBar";
 import ItemsListContainer from "./components/ItemsListContainer";
 import ItemDetailContainer from "./components/ItemDetailContainer";
+import Checkout from "./components/Checkout";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
+import db from "./helpers/firebase";
+import { collection, query, getDocs } from "firebase/firestore";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const instrumentos = [
-    {
-      id: 10,
-      nombre: "Guitarra acustica",
-      imagen: "",
-      detalles:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-      resumen: "Lorem Ipsum is simply dummy text",
-      categoria: 0,
-      precio: "100",
-    },
-    {
-      id: 11,
-      nombre: "Set bateria completo",
-      imagen: "",
-      detalles:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-      resumen: "Lorem Ipsum is simply dummy text",
-      categoria: 1,
-      precio: "100",
-    },
-    {
-      id: 12,
-      nombre: "Bajo",
-      imagen: "",
-      detalles:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
-      resumen: "Lorem Ipsum is simply dummy text",
-      categoria: 2,
-      precio: "100",
-    },
-  ];
+  const [instrumentos, setInstrumentos] = useState([]);
 
-  const categorias = ["Guitarras", "Baterias", "Bajos"];
+  useEffect(() => {
+    //Cargar instrumentos
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const q = query(collection(db, "instrumentos"));
+    const data = [];
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      let instrumento = {
+        id: doc.id,
+        ...doc.data(),
+      };
+      data.push(instrumento);
+      console.log(doc.id, " => ", doc.data());
+    });
+    setInstrumentos(data);
+  };
+
+  const categorias = ["Guitarras", "Microfonos", "Pianos"];
 
   return (
     <div>
       <NavBar />
+      <ToastContainer />
       <Routes>
         <Route
           path="/"
@@ -69,6 +65,16 @@ function App() {
           path="/item/:id"
           Component={(props) => (
             <ItemDetailContainer
+              instrumentos={instrumentos}
+              categorias={categorias}
+              {...props}
+            />
+          )}
+        />
+        <Route
+          path="/checkout/"
+          Component={(props) => (
+            <Checkout
               instrumentos={instrumentos}
               categorias={categorias}
               {...props}

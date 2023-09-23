@@ -23,12 +23,12 @@ export default function Dropdown() {
           </li>
           <li className="menu-item">
             <Link to={"/category/1"} onClick={() => setOpen(!open)}>
-              Baterias
+              Microfonos
             </Link>
           </li>
           <li className="menu-item">
             <Link to={"/category/2"} onClick={() => setOpen(!open)}>
-              Bajos
+              Pianos
             </Link>
           </li>
         </ul>

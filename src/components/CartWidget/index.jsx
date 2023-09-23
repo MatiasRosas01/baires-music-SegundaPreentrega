@@ -1,17 +1,16 @@
 import React from "react";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import './style.css'
+import { Link } from "react-router-dom";
+
+import "./style.css";
 
 export default function CartWidget() {
- //en el futuro sera definido dinamicamente 
-  const contador=4;  
   return (
     <div className="carrito">
-      <i>
+      <Link to="/checkout">
         <FontAwesomeIcon icon={faCartShopping} />
-      </i>
-      <p>{contador}</p>
+      </Link>
     </div>
   );
 }
